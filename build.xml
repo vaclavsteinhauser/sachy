@@ -1,0 +1,39 @@
+<project name="Sachy" default="build" basedir=".">
+  <property name="src.dir" value="./src"/>
+  <property name="doc.dir" value="./doc"/>
+  <property name="build.dir" value="./build"/>
+
+  <target name="init" depends="clean">
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+  <target name="build" depends="init">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="last"/>
+  </target>
+
+  <target name="dist" depends="build">
+    <copy todir="${build.dir}">
+      <fileset dir=".">
+        <include name="*.png" />
+        <include name="*.jpg" />
+      </fileset>
+    </copy>
+    <jar destfile="${build.dir}/Sachy.jar" basedir="${build.dir}" includes="sachy/*">
+      <manifest>
+        <attribute name="cz.cuni.mff.d3s.java.sachy.Main-Class" value="sachy.cz.cuni.mff.d3s.java.sachy.Main"/>
+        <attribute name="Project" value="Sachy"/>
+      </manifest>
+
+    </jar>
+  </target>
+  <target name="test">
+    <available file="${build.dir}/Sachy.jar" property="uptodate"/>
+  </target>
+  <target name="run" depends="dist" if="uptodate">
+    <java jar="${build.dir}/Sachy.jar" fork="true" />
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+</project>
